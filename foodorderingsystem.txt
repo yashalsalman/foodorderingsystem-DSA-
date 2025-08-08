@@ -1,0 +1,217 @@
+import java.util.Scanner;
+// Node class for Menu Items
+class MenuItem {
+    String name;
+    int price;
+    MenuItem next;
+
+    public MenuItem(String name, int price) {
+        this.name = name;
+        this.price = price;
+        this.next = null;
+    }
+}
+// Node class for Order Items
+class OrderItem {
+    String name;
+    int price;
+    OrderItem next;
+
+    public OrderItem(String name, int price) {
+        this.name = name;
+        this.price = price;
+        this.next = null;
+    }
+}
+// Class for User Details
+class UserDetails {
+    String username;
+    String contactNumber;
+    String address;
+    String paymentMethod;
+    String cardNumber;  // To store card number if payment method is CreditCard
+
+    public UserDetails(String username, String contactNumber, String address, String paymentMethod) {
+        this.username = username;
+        this.contactNumber = contactNumber;
+        this.address = address;
+        this.paymentMethod = paymentMethod;
+    }
+}
+class FoodOrderingSystem {
+    static MenuItem menuHead; // Head of the menu linked list
+    static OrderItem orderHead; // Head of the order linked list
+    static int totalCost = 0;
+    static UserDetails userDetails; // User details instance
+    static final int DELIVERY_CHARGES = 100; // Fixed delivery charges
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        // Initialize menu
+        addMenuItem("Zinger Burger", 310);
+        addMenuItem("Dynamite Chicken Pizza", 299);
+        addMenuItem("Alfredo Pasta", 550);
+        addMenuItem("Crispy Chicken Sandwich", 275);
+        addMenuItem("Mayo Fries", 175);
+        addMenuItem("Lava Cake", 220);
+        addMenuItem("Soft Drink", 100);
+        System.out.println("Welcome to our Food Ordering System!");
+        System.out.println("======================================");
+        // Get user details
+        System.out.println("Please enter your details:");
+        System.out.print("Name: ");
+        String username = scanner.nextLine();
+        System.out.print("Contact Number: ");
+        String contactNumber = scanner.nextLine();
+        System.out.print("Address: ");
+        String address = scanner.nextLine();
+        System.out.print("Payment Method (Cash/CreditCard): ");
+        String paymentMethod = scanner.nextLine();
+
+        // Create user details with payment method
+        userDetails = new UserDetails(username, contactNumber, address, paymentMethod);
+
+        // Ask for card number if payment method is CreditCard
+        if ("CreditCard".equalsIgnoreCase(paymentMethod)) {
+            System.out.print("Please enter your credit card number: ");
+            userDetails.cardNumber = scanner.nextLine();  // Take card number input
+        }
+
+        while (true) {
+            System.out.println("=====================================");
+            System.out.println("Select an option...");
+            System.out.println("1. View Menu");
+            System.out.println("2. Place Order");
+            System.out.println("3. View Order Details");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    displayMenu();
+                    break;
+                case 2:
+                    placeOrder(scanner);
+                    break;
+                case 3:
+                    displayOrderDetails();
+                    break;
+                case 4:
+                    System.out.println("Thank you for ordering! Visit again :)");
+                    return;
+                default:
+                    System.out.println("Invalid choice! Try again.");
+            }
+        }
+    }
+
+    // Add an item to the menu
+    static void addMenuItem(String name, int price) {
+        MenuItem newItem = new MenuItem(name, price);
+        if (menuHead == null) {
+            menuHead = newItem;
+        } else {
+            MenuItem temp = menuHead;
+            while (temp.next != null) {
+                temp = temp.next;
+            }
+            temp.next = newItem;
+        }
+    }
+
+    // Display menu
+    static void displayMenu() {
+        System.out.println("\nFood Menu:");
+        System.out.println("-----------");
+        MenuItem temp = menuHead;
+        while (temp != null) {
+            System.out.println(temp.name + " - Rs. " + temp.price);
+            temp = temp.next;
+        }
+    }
+
+    // Place an order
+    static void placeOrder(Scanner scanner) {
+        System.out.println("\nWhat would you like to order?");
+        displayMenu();
+        System.out.println("\nEnter the name of item then type 'done' to finish:");
+        while (true) {
+            String itemName = scanner.nextLine();
+            if (itemName.equalsIgnoreCase("done")) {
+                System.out.println("Order completed.");
+                break;
+            }
+            MenuItem temp = menuHead;
+            boolean itemFound = false;
+
+            while (temp != null) {
+                if (temp.name.equalsIgnoreCase(itemName)) {
+                    addOrderItem(temp.name, temp.price);
+                    totalCost += temp.price;
+                    System.out.println(temp.name + " added to your order!");
+                    itemFound = true;
+                    break;
+                }
+                temp = temp.next;
+            }
+
+            if (!itemFound) {
+                System.out.println("Item not found on the menu. Please try again.");
+            }
+        }
+    }
+
+    // Add an item to the order list
+    static void addOrderItem(String name, int price) {
+        OrderItem newOrder = new OrderItem(name, price);
+        if (orderHead == null) {
+            orderHead = newOrder;
+        } else {
+            OrderItem temp = orderHead;
+            while (temp.next != null) {
+                temp = temp.next;
+            }
+            temp.next = newOrder;
+        }
+    }
+
+    // Display order details
+    static void displayOrderDetails() {
+        if (orderHead == null) {
+            System.out.println("\nYour order is empty!");
+            return;
+        }
+         System.out.println("==========================");
+         System.out.println("\nUser Details:");
+         System.out.println("==========================");
+        System.out.println("Name: " + userDetails.username);
+        System.out.println("Contact: " + userDetails.contactNumber);
+        System.out.println("Address: " + userDetails.address);
+        System.out.println("Payment Method: " + userDetails.paymentMethod);
+
+        // Display card number if payment method is CreditCard
+        if ("CreditCard".equalsIgnoreCase(userDetails.paymentMethod)) {
+            System.out.println("Card Number: " + userDetails.cardNumber);
+        }
+System.out.println("=====================");
+        System.out.println("\nOrder Details:");
+        System.out.println("-------------------");
+        OrderItem temp = orderHead;
+        while (temp != null) {
+            System.out.println(temp.name + " - Rs. " + temp.price);
+            temp = temp.next;
+        }
+        System.out.println("----------------------");
+        // If payment method is Cash, add delivery charges
+        int finalCost = totalCost;
+        if ("Cash".equalsIgnoreCase(userDetails.paymentMethod)) {
+            finalCost += DELIVERY_CHARGES;
+            System.out.println("Delivery Charges: Rs. " + DELIVERY_CHARGES);
+        }
+
+        System.out.println("Total Cost: Rs. " + finalCost);
+        System.out.println("=====================")
+    }
+}
