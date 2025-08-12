@@ -1,4 +1,4 @@
-In this project, i have practised all of my "Data Structures and Algorithms (DSA) concepts and demonstrates the use of linked lists in a real-world scenario.
+In this project, i have practised all of my Data Structures and Algorithms (DSA) concepts and demonstrates the use of linked lists in a real-world scenario.
 It is a console-based Food Ordering System developed in Java, where both menu items and customer orders are stored and managed dynamically using custom singly linked list implementations.
 
 The system allows a user to view a menu, place orders, provide personal and payment details, and review a complete order summary. It was built to reinforce my understanding of data structures, object-oriented programming (OOP), and input handling in Java while creating a functional and interactive application.
